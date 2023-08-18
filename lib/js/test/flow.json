@@ -9,7 +9,7 @@
 		"FungibleToken": "../../../contracts/utility/FungibleToken.cdc",
 		"NonFungibleToken": "../../../contracts/NonFungibleToken.cdc",
 		"MetadataViews": "../../../contracts/MetadataViews.cdc",
-		"ExampleNFT": "../../../contracts/ExampleNFT.cdc",
+		"CandyNFT": "../../../contracts/CandyNFT.cdc",
 		"NFTForwarding": "../../../contracts/utility/NFTForwarding.cdc"
 	},
 	"networks": {
@@ -29,7 +29,7 @@
 				"FungibleToken",
 				"NonFungibleToken",
 				"MetadataViews",
-				"ExampleNFT",
+				"CandyNFT",
 				"NFTForwarding"
 			]
 		}

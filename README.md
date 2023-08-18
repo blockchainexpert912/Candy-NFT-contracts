@@ -44,7 +44,7 @@ Contracts that implement the `NonFungibleToken` interface are required to implem
 
   Users typically store one collection per NFT type, saved at a well-known location in their account storage.
 
-  For example, all NBA Top Shot Moments owned by a single user are held in a [`TopShot.Collection`](https://github.com/dapperlabs/nba-smart-contracts/blob/master/contracts/TopShot.cdc#L605) stored in their account at the path `/storage/MomentCollection`.
+  For Candy, all NBA Top Shot Moments owned by a single user are held in a [`TopShot.Collection`](https://github.com/dapperlabs/nba-smart-contracts/blob/master/contracts/TopShot.cdc#L605) stored in their account at the path `/storage/MomentCollection`.
 
 ### Create a new NFT collection
 
@@ -56,24 +56,24 @@ Users typically save new collections to a well-known location in their account
 and link the `NonFungibleToken.CollectionPublic` interface as a public capability.
 
 ```swift
-let collection <- ExampleNFT.createEmptyCollection()
+let collection <- CandyNFT.createEmptyCollection()
 
-account.save(<-collection, to: /storage/ExampleNFTCollection)
+account.save(<-collection, to: /storage/CandyNFTCollection)
 
 // create a public capability for the collection
 account.link<&{NonFungibleToken.CollectionPublic}>(
-    /public/ExampleNFTCollection,
-    target: /storage/ExampleNFTCollection
+    /public/CandyNFTCollection,
+    target: /storage/CandyNFTCollection
 )
 ```
 
 ### Withdraw an NFT
 
-Withdraw an `NFT` from a `Collection` using the [`withdraw`](contracts/ExampleNFT.cdc#L36-L42) function.
-This function emits the [`Withdraw`](contracts/ExampleNFT.cdc#L12) event.
+Withdraw an `NFT` from a `Collection` using the [`withdraw`](contracts/CandyNFT.cdc#L36-L42) function.
+This function emits the [`Withdraw`](contracts/CandyNFT.cdc#L12) event.
 
 ```swift
-let collectionRef = account.borrow<&ExampleNFT.Collection>(from: /storage/ExampleNFTCollection)
+let collectionRef = account.borrow<&CandyNFT.Collection>(from: /storage/CandyNFTCollection)
     ?? panic("Could not borrow a reference to the owner's collection")
 
 // withdraw the NFT from the owner's collection
@@ -82,8 +82,8 @@ let nft <- collectionRef.withdraw(withdrawID: 42)
 
 ### Deposit an NFT
 
-Deposit an `NFT` into a `Collection` using the [`deposit`](contracts/ExampleNFT.cdc#L46-L57) function.
-This function emits the [`Deposit`](contracts/ExampleNFT.cdc#L13) event.
+Deposit an `NFT` into a `Collection` using the [`deposit`](contracts/CandyNFT.cdc#L46-L57) function.
+This function emits the [`Deposit`](contracts/CandyNFT.cdc#L13) event.
 
 This function is available on the `NonFungibleToken.CollectionPublic` interface,
 which accounts publish as public capability.
@@ -91,11 +91,11 @@ This capability allows anybody to deposit an NFT into a collection
 without accessing the entire collection.
 
 ```swift
-let nft: ExampleNFT.NFT
+let nft: CandyNFT.NFT
 
 // ...
 
-let collection = account.getCapability(/public/ExampleNFTCollection)
+let collection = account.getCapability(/public/CandyNFTCollection)
     .borrow<&{NonFungibleToken.CollectionPublic}>()
     ?? panic("Could not borrow a reference to the receiver's collection")
 
@@ -108,21 +108,21 @@ In order to comply with the deposit function in the interface,
 an implementation MUST take a `@NonFungibleToken.NFT` resource as an argument.
 This means that anyone can send a resource object that conforms to `@NonFungibleToken.NFT` to a deposit function.
 In an implementation, you MUST cast the `token` as your specific token type before depositing it or you will
-deposit another token type into your collection. For example:
+deposit another token type into your collection. For Candy:
 
 ```swift
-let token <- token as! @ExampleNFT.NFT
+let token <- token as! @CandyNFT.NFT
 ```
 
 ### List NFTs in an account
 
-Return a list of NFTs in a `Collection` using the [`getIDs`](contracts/ExampleNFT.cdc#L59-L62) function.
+Return a list of NFTs in a `Collection` using the [`getIDs`](contracts/CandyNFT.cdc#L59-L62) function.
 
 This function is available on the `NonFungibleToken.CollectionPublic` interface,
 which accounts publish as public capability.
 
 ```swift
-let collection = account.getCapability(/public/ExampleNFTCollection)
+let collection = account.getCapability(/public/CandyNFTCollection)
     .borrow<&{NonFungibleToken.CollectionPublic}>()
     ?? panic("Could not borrow a reference to the receiver's collection")
 
@@ -145,24 +145,24 @@ the format to query and return them, so projects can still be flexible with how 
 
 ### How to read metadata
 
-This example shows how to read basic information about an NFT
+This Candy shows how to read basic information about an NFT
 including the name, description, image and owner.
 
 **Source: [get_nft_metadata.cdc](scripts/get_nft_metadata.cdc)**
 
 ```swift
-import ExampleNFT from "..."
+import CandyNFT from "..."
 import MetadataViews from "..."
 
 // ...
 
 // Get the regular public capability
-let collection = account.getCapability(ExampleNFT.CollectionPublicPath)
-    .borrow<&{ExampleNFT.ExampleNFTCollectionPublic}>()
+let collection = account.getCapability(CandyNFT.CollectionPublicPath)
+    .borrow<&{CandyNFT.CandyNFTCollectionPublic}>()
     ?? panic("Could not borrow a reference to the collection")
 
 // Borrow a reference to the NFT as usual
-let nft = collection.borrowExampleNFT(id: 42)
+let nft = collection.borrowCandyNFT(id: 42)
     ?? panic("Could not borrow a reference to the NFT")
 
 // Call the resolveView method
@@ -183,12 +183,12 @@ let owner: Address = nft.owner!.address!
 // Inspect the type of this NFT to verify its origin
 let nftType = nft.getType()
 
-// `nftType.identifier` is `A.e03daebed8ca0615.ExampleNFT.NFT`
+// `nftType.identifier` is `A.e03daebed8ca0615.CandyNFT.NFT`
 ```
 
 ### How to implement metadata
 
-The [example NFT contract](contracts/ExampleNFT.cdc) shows how to implement metadata views.
+The [Candy NFT contract](contracts/CandyNFT.cdc) shows how to implement metadata views.
 
 ### List of views
 
@@ -223,7 +223,7 @@ When exposing a view that could have multiple occurrences on a single NFT, such 
 
 When resolving the view, the wrapper view should be the returned value, instead of returning the single view or just an array of several occurrences of the view.
 
-### Example
+### Candy
 
 #### Preferred
 
@@ -231,7 +231,7 @@ When resolving the view, the wrapper view should be the returned value, instead 
 pub fun resolveView(_ view: Type): AnyStruct? {
     switch view {
         case Type<MetadataViews.Editions>():
-            let editionInfo = MetadataViews.Edition(name: "Example NFT Edition", number: self.id, max: nil)
+            let editionInfo = MetadataViews.Edition(name: "Candy NFT Edition", number: self.id, max: nil)
             let editionList: [MetadataViews.Edition] = [editionInfo]
             return MetadataViews.Editions(
                 editionList
@@ -247,7 +247,7 @@ pub fun resolveView(_ view: Type): AnyStruct? {
 pub fun resolveView(_ view: Type): AnyStruct? {
     switch view {
         case Type<MetadataViews.Editions>():
-            let editionInfo = MetadataViews.Edition(name: "Example NFT Edition", number: self.id, max: nil)
+            let editionInfo = MetadataViews.Edition(name: "Candy NFT Edition", number: self.id, max: nil)
             return editionInfo
     }
 }
@@ -257,7 +257,7 @@ pub fun resolveView(_ view: Type): AnyStruct? {
 pub fun resolveView(_ view: Type): AnyStruct? {
     switch view {
         case Type<MetadataViews.Editions>():
-            let editionInfo = MetadataViews.Edition(name: "Example NFT Edition", number: self.id, max: nil)
+            let editionInfo = MetadataViews.Edition(name: "Candy NFT Edition", number: self.id, max: nil)
             let editionList: [MetadataViews.Edition] = [editionInfo]
             return editionList
     }
@@ -312,7 +312,7 @@ They could either get the address of the receiver by using the
 they could perform the sale without a royalty cut, or they could abort the sale
 since the token type isn't accepted by the royalty beneficiary.
 
-You can see example implementations of royalties in the `ExampleNFT` contract
+You can see Candy implementations of royalties in the `CandyNFT` contract
 and the associated transactions and scripts.
 
 #### Important instructions for royalty receivers
@@ -333,7 +333,7 @@ fungible token switchboard instead.
 ## Contract metadata
 
 Now that contract borrowing is released, you can also implement the [Resolver](./contracts/Resolver.cdc) interface on your contract
-and resolve views from there. As an example, you might want to allow your contract to resolve NFTCollectionData and NFTCollectionDisplay
+and resolve views from there. As an Candy, you might want to allow your contract to resolve NFTCollectionData and NFTCollectionDisplay
 so that platforms do not need to find an NFT that belongs to your contract to get information about how to set up or show your collection.
 
 ```cadence
@@ -356,7 +356,7 @@ pub fun main(addr: Address, name: String): StoragePath? {
 
 Will Return
 ```cadence
-{"domain":"storage","identifier":"exampleNFTCollection"}
+{"domain":"storage","identifier":"CandyNFTCollection"}
 ```
 
 ## How to propose a new view
@@ -369,7 +369,7 @@ As Flow and Cadence are still new,
 we expect this standard to evolve based on feedback
 from both developers and users.
 
-We'd love to hear from anyone who has feedback. For example:
+We'd love to hear from anyone who has feedback. For Candy:
 
 - Are there any features that are missing from the standard?
 - Are the current features defined in the best way possible?
@@ -404,7 +404,7 @@ or with the [Visual Studio Code Extension](https://github.com/onflow/flow/blob/m
 The steps to follow are:
 
 1. Deploy `NonFungibleToken.cdc`
-2. Deploy `ExampleNFT.cdc`, importing `NonFungibleToken` from the address you deployed it to.
+2. Deploy `CandyNFT.cdc`, importing `NonFungibleToken` from the address you deployed it to.
 
 Then you can experiment with some of the other transactions and scripts in `transactions/`
 or even write your own. You'll need to replace some of the import address placeholders with addresses that you deploy to, as well as some of the transaction arguments.
@@ -448,7 +448,7 @@ You can find automated tests in the `lib/go/test/nft_test.go` file. It uses the 
 
 The works in these files:
 
-- [ExampleNFT.cdc](contracts/ExampleNFT.cdc)
+- [CandyNFT.cdc](contracts/CandyNFT.cdc)
 - [NonFungibleToken.cdc](contracts/NonFungibleToken.cdc)
 
 are under the [Unlicense](LICENSE).

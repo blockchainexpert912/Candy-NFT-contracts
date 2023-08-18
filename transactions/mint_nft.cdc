@@ -3,7 +3,7 @@
 /// stored in /storage/NFTMinter
 
 import NonFungibleToken from "NonFungibleToken"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import MetadataViews from "MetadataViews"
 import FungibleToken from "FungibleToken"
 
@@ -18,7 +18,7 @@ transaction(
 ) {
 
     /// local variable for storing the minter reference
-    let minter: &ExampleNFT.NFTMinter
+    let minter: &CandyNFT.NFTMinter
 
     /// Reference to the receiver's collection
     let recipientCollectionRef: &{NonFungibleToken.CollectionPublic}
@@ -27,15 +27,15 @@ transaction(
     let mintingIDBefore: UInt64
 
     prepare(signer: AuthAccount) {
-        self.mintingIDBefore = ExampleNFT.totalSupply
+        self.mintingIDBefore = CandyNFT.totalSupply
 
         // borrow a reference to the NFTMinter resource in storage
-        self.minter = signer.borrow<&ExampleNFT.NFTMinter>(from: ExampleNFT.MinterStoragePath)
+        self.minter = signer.borrow<&CandyNFT.NFTMinter>(from: CandyNFT.MinterStoragePath)
             ?? panic("Account does not store an object at the specified path")
 
         // Borrow the recipient's public NFT collection reference
         self.recipientCollectionRef = getAccount(recipient)
-            .getCapability(ExampleNFT.CollectionPublicPath)
+            .getCapability(CandyNFT.CollectionPublicPath)
             .borrow<&{NonFungibleToken.CollectionPublic}>()
             ?? panic("Could not get receiver reference to the NFT Collection")
     }
@@ -81,6 +81,6 @@ transaction(
 
     post {
         self.recipientCollectionRef.getIDs().contains(self.mintingIDBefore): "The next NFT ID should have been minted and delivered"
-        ExampleNFT.totalSupply == self.mintingIDBefore + 1: "The total supply should have been increased by 1"
+        CandyNFT.totalSupply == self.mintingIDBefore + 1: "The total supply should have been increased by 1"
     }
 }

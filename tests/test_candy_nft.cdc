@@ -6,12 +6,12 @@ pub let recipient = blockchain.createAccount()
 
 pub fun setup() {
     blockchain.useConfiguration(Test.Configuration({
-        "ExampleNFT": admin.address
+        "CandyNFT": admin.address
     }))
 
-    let code = Test.readFile("../contracts/ExampleNFT.cdc")
+    let code = Test.readFile("../contracts/CandyNFT.cdc")
     let err = blockchain.deployContract(
-        name: "ExampleNFT",
+        name: "CandyNFT",
         code: code,
         account: admin,
         arguments: []
@@ -21,7 +21,7 @@ pub fun setup() {
 }
 
 pub fun testContractInitializedEventEmitted() {
-    let typ = CompositeType("A.01cf0e2f2f715450.ExampleNFT.ContractInitialized")!
+    let typ = CompositeType("A.01cf0e2f2f715450.CandyNFT.ContractInitialized")!
 
     Test.assertEqual(1, blockchain.eventsOfType(typ).length)
 }
@@ -94,7 +94,7 @@ pub fun testMintNFT() {
 
     Test.expect(txResult, Test.beSucceeded())
 
-    let typ = CompositeType("A.01cf0e2f2f715450.ExampleNFT.Deposit")!
+    let typ = CompositeType("A.01cf0e2f2f715450.CandyNFT.Deposit")!
     Test.assertEqual(1, blockchain.eventsOfType(typ).length)
 
     code = Test.readFile("../scripts/get_collection_ids.cdc")
@@ -102,7 +102,7 @@ pub fun testMintNFT() {
         code,
         [
             recipient.address,
-            /public/exampleNFTCollection
+            /public/CandyNFTCollection
         ]
     )
 
@@ -127,10 +127,10 @@ pub fun testTransferNFT() {
 
     Test.expect(txResult, Test.beSucceeded())
 
-    var typ = CompositeType("A.01cf0e2f2f715450.ExampleNFT.Withdraw")!
+    var typ = CompositeType("A.01cf0e2f2f715450.CandyNFT.Withdraw")!
     Test.assertEqual(1, blockchain.eventsOfType(typ).length)
 
-    typ = CompositeType("A.01cf0e2f2f715450.ExampleNFT.Deposit")!
+    typ = CompositeType("A.01cf0e2f2f715450.CandyNFT.Deposit")!
     Test.assertEqual(2, blockchain.eventsOfType(typ).length)
 
     code = Test.readFile("../scripts/get_collection_ids.cdc")
@@ -138,7 +138,7 @@ pub fun testTransferNFT() {
         code,
         [
             admin.address,
-            /public/exampleNFTCollection
+            /public/CandyNFTCollection
         ]
     )
 
@@ -200,7 +200,7 @@ pub fun testGetCollectionIDs() {
         code,
         [
             admin.address,
-            /public/exampleNFTCollection
+            /public/CandyNFTCollection
         ]
     )
 
@@ -229,14 +229,14 @@ pub fun testGetContractStoragePath() {
         code,
         [
             admin.address,
-            "ExampleNFT"
+            "CandyNFT"
         ]
     )
 
     Test.expect(scriptResult, Test.beSucceeded())
 
     let storagePath = (scriptResult.returnValue as! StoragePath?)!
-    Test.assertEqual(/storage/exampleNFTCollection, storagePath)
+    Test.assertEqual(/storage/CandyNFTCollection, storagePath)
 }
 
 pub fun testGetMissingContractStoragePath() {
@@ -317,8 +317,8 @@ pub fun testGetViews() {
     Test.expect(scriptResult, Test.beSucceeded())
 }
 
-pub fun testGetExampleNFTViews() {
-    let code = Test.readFile("scripts/get_example_nft_views.cdc")
+pub fun testGetCandyNFTViews() {
+    let code = Test.readFile("scripts/get_Candy_nft_views.cdc")
     let scriptResult = blockchain.executeScript(
         code,
         []
@@ -327,7 +327,7 @@ pub fun testGetExampleNFTViews() {
     Test.expect(scriptResult, Test.beSucceeded())
 }
 
-pub fun testResolveExampleNFTViews() {
+pub fun testResolveCandyNFTViews() {
     let code = Test.readFile("scripts/resolve_nft_views.cdc")
     let scriptResult = blockchain.executeScript(
         code,

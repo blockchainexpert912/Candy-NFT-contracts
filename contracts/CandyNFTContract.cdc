@@ -1,6 +1,6 @@
 /*
 *
-*  This is an example implementation of a Flow Non-Fungible Token
+*  This is an Candy implementation of a Flow Non-Fungible Token
 *  It is not part of the official standard but it assumed to be
 *  similar to how many NFTs would implement the core functionality.
 *
@@ -13,9 +13,9 @@ import NonFungibleToken from "NonFungibleToken"
 import MetadataViews from "MetadataViews"
 import ViewResolver from "ViewResolver"
 
-pub contract ExampleNFT: NonFungibleToken, ViewResolver {
+pub contract CandyNFT: NonFungibleToken, ViewResolver {
 
-    /// Total supply of ExampleNFTs in existence
+    /// Total supply of CandyNFTs in existence
     pub var totalSupply: UInt64
 
     /// The event that is emitted when the contract is created
@@ -100,7 +100,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
                 case Type<MetadataViews.Editions>():
                     // There is no max number of NFTs that can be minted from this contract
                     // so the max edition field value is set to nil
-                    let editionInfo = MetadataViews.Edition(name: "Example NFT Edition", number: self.id, max: nil)
+                    let editionInfo = MetadataViews.Edition(name: "Candy NFT Edition", number: self.id, max: nil)
                     let editionList: [MetadataViews.Edition] = [editionInfo]
                     return MetadataViews.Editions(
                         editionList
@@ -114,17 +114,17 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
                         self.royalties
                     )
                 case Type<MetadataViews.ExternalURL>():
-                    return MetadataViews.ExternalURL("https://example-nft.onflow.org/".concat(self.id.toString()))
+                    return MetadataViews.ExternalURL("https://Candy-nft.onflow.org/".concat(self.id.toString()))
                 case Type<MetadataViews.NFTCollectionData>():
                     return MetadataViews.NFTCollectionData(
-                        storagePath: ExampleNFT.CollectionStoragePath,
-                        publicPath: ExampleNFT.CollectionPublicPath,
-                        providerPath: /private/exampleNFTCollection,
-                        publicCollection: Type<&ExampleNFT.Collection{ExampleNFT.ExampleNFTCollectionPublic}>(),
-                        publicLinkedType: Type<&ExampleNFT.Collection{ExampleNFT.ExampleNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver,MetadataViews.ResolverCollection}>(),
-                        providerLinkedType: Type<&ExampleNFT.Collection{ExampleNFT.ExampleNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider,MetadataViews.ResolverCollection}>(),
+                        storagePath: CandyNFT.CollectionStoragePath,
+                        publicPath: CandyNFT.CollectionPublicPath,
+                        providerPath: /private/CandyNFTCollection,
+                        publicCollection: Type<&CandyNFT.Collection{CandyNFT.CandyNFTCollectionPublic}>(),
+                        publicLinkedType: Type<&CandyNFT.Collection{CandyNFT.CandyNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver,MetadataViews.ResolverCollection}>(),
+                        providerLinkedType: Type<&CandyNFT.Collection{CandyNFT.CandyNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider,MetadataViews.ResolverCollection}>(),
                         createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
-                            return <-ExampleNFT.createEmptyCollection()
+                            return <-CandyNFT.createEmptyCollection()
                         })
                     )
                 case Type<MetadataViews.NFTCollectionDisplay>():
@@ -135,13 +135,13 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
                         mediaType: "image/svg+xml"
                     )
                     return MetadataViews.NFTCollectionDisplay(
-                        name: "The Example Collection",
-                        description: "This collection is used as an example to help you develop your next Flow NFT.",
-                        externalURL: MetadataViews.ExternalURL("https://example-nft.onflow.org"),
+                        name: "Candy Collection",
+                        description: "-",
+                        externalURL: MetadataViews.ExternalURL("-"),
                         squareImage: media,
                         bannerImage: media,
                         socials: {
-                            "twitter": MetadataViews.ExternalURL("https://twitter.com/flow_blockchain")
+                            "twitter": MetadataViews.ExternalURL("h-")
                         }
                     )
                 case Type<MetadataViews.Traits>():
@@ -167,14 +167,14 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
 
     /// Defines the methods that are particular to this NFT contract collection
     ///
-    pub resource interface ExampleNFTCollectionPublic {
+    pub resource interface CandyNFTCollectionPublic {
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
-        pub fun borrowExampleNFT(id: UInt64): &ExampleNFT.NFT? {
+        pub fun borrowCandyNFT(id: UInt64): &CandyNFT.NFT? {
             post {
                 (result == nil) || (result?.id == id):
-                    "Cannot borrow ExampleNFT reference: the ID of the returned reference is incorrect"
+                    "Cannot borrow CandyNFT reference: the ID of the returned reference is incorrect"
             }
         }
     }
@@ -183,7 +183,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
     /// In order to be able to manage NFTs any account will need to create
     /// an empty collection first
     ///
-    pub resource Collection: ExampleNFTCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection {
+    pub resource Collection: CandyNFTCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
@@ -210,7 +210,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         /// @param token: The NFT resource to be included in the collection
         ///
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @ExampleNFT.NFT
+            let token <- token as! @CandyNFT.NFT
 
             let id: UInt64 = token.id
 
@@ -246,11 +246,11 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         /// @param id: The ID of the wanted NFT
         /// @return A reference to the wanted NFT resource
         ///
-        pub fun borrowExampleNFT(id: UInt64): &ExampleNFT.NFT? {
+        pub fun borrowCandyNFT(id: UInt64): &CandyNFT.NFT? {
             if self.ownedNFTs[id] != nil {
                 // Create an authorized reference to allow downcasting
                 let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
-                return ref as! &ExampleNFT.NFT
+                return ref as! &CandyNFT.NFT
             }
 
             return nil
@@ -265,8 +265,8 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         ///
         pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
             let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
-            let exampleNFT = nft as! &ExampleNFT.NFT
-            return exampleNFT as &AnyResource{MetadataViews.Resolver}
+            let CandyNFT = nft as! &CandyNFT.NFT
+            return CandyNFT as &AnyResource{MetadataViews.Resolver}
         }
 
         destroy() {
@@ -314,7 +314,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
 
             // create a new NFT
             var newNFT <- create NFT(
-                id: ExampleNFT.totalSupply,
+                id: CandyNFT.totalSupply,
                 name: name,
                 description: description,
                 thumbnail: thumbnail,
@@ -325,7 +325,7 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
             // deposit it in the recipient's account using their reference
             recipient.deposit(token: <-newNFT)
 
-            ExampleNFT.totalSupply = ExampleNFT.totalSupply + UInt64(1)
+            CandyNFT.totalSupply = CandyNFT.totalSupply + UInt64(1)
         }
     }
 
@@ -338,14 +338,14 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         switch view {
             case Type<MetadataViews.NFTCollectionData>():
                 return MetadataViews.NFTCollectionData(
-                    storagePath: ExampleNFT.CollectionStoragePath,
-                    publicPath: ExampleNFT.CollectionPublicPath,
-                    providerPath: /private/exampleNFTCollection,
-                    publicCollection: Type<&ExampleNFT.Collection{ExampleNFT.ExampleNFTCollectionPublic}>(),
-                    publicLinkedType: Type<&ExampleNFT.Collection{ExampleNFT.ExampleNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver,MetadataViews.ResolverCollection}>(),
-                    providerLinkedType: Type<&ExampleNFT.Collection{ExampleNFT.ExampleNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider,MetadataViews.ResolverCollection}>(),
+                    storagePath: CandyNFT.CollectionStoragePath,
+                    publicPath: CandyNFT.CollectionPublicPath,
+                    providerPath: /private/CandyNFTCollection,
+                    publicCollection: Type<&CandyNFT.Collection{CandyNFT.CandyNFTCollectionPublic}>(),
+                    publicLinkedType: Type<&CandyNFT.Collection{CandyNFT.CandyNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver,MetadataViews.ResolverCollection}>(),
+                    providerLinkedType: Type<&CandyNFT.Collection{CandyNFT.CandyNFTCollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider,MetadataViews.ResolverCollection}>(),
                     createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
-                        return <-ExampleNFT.createEmptyCollection()
+                        return <-CandyNFT.createEmptyCollection()
                     })
                 )
             case Type<MetadataViews.NFTCollectionDisplay>():
@@ -356,9 +356,9 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
                     mediaType: "image/svg+xml"
                 )
                 return MetadataViews.NFTCollectionDisplay(
-                    name: "The Example Collection",
-                    description: "This collection is used as an example to help you develop your next Flow NFT.",
-                    externalURL: MetadataViews.ExternalURL("https://example-nft.onflow.org"),
+                    name: "The Candy Collection",
+                    description: "This collection is used as an Candy to help you develop your next Flow NFT.",
+                    externalURL: MetadataViews.ExternalURL("https://Candy-nft.onflow.org"),
                     squareImage: media,
                     bannerImage: media,
                     socials: {
@@ -386,16 +386,16 @@ pub contract ExampleNFT: NonFungibleToken, ViewResolver {
         self.totalSupply = 0
 
         // Set the named paths
-        self.CollectionStoragePath = /storage/exampleNFTCollection
-        self.CollectionPublicPath = /public/exampleNFTCollection
-        self.MinterStoragePath = /storage/exampleNFTMinter
+        self.CollectionStoragePath = /storage/CandyNFTCollection
+        self.CollectionPublicPath = /public/CandyNFTCollection
+        self.MinterStoragePath = /storage/CandyNFTMinter
 
         // Create a Collection resource and save it to storage
         let collection <- create Collection()
         self.account.save(<-collection, to: self.CollectionStoragePath)
 
         // create a public capability for the collection
-        self.account.link<&ExampleNFT.Collection{NonFungibleToken.CollectionPublic, ExampleNFT.ExampleNFTCollectionPublic, MetadataViews.ResolverCollection}>(
+        self.account.link<&CandyNFT.Collection{NonFungibleToken.CollectionPublic, CandyNFT.CandyNFTCollectionPublic, MetadataViews.ResolverCollection}>(
             self.CollectionPublicPath,
             target: self.CollectionStoragePath
         )

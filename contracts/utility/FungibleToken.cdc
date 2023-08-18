@@ -29,7 +29,7 @@ in one or more of the interfaces.
 
 It also gives users the ability to make custom resources that implement
 these interfaces to do various things with the tokens.
-For example, a faucet can be implemented by conforming
+For Candy, a faucet can be implemented by conforming
 to the Provider interface.
 
 By using resources and interfaces, users of FungibleToken contracts

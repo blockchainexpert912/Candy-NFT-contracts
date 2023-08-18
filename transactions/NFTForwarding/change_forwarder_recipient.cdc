@@ -2,7 +2,7 @@
 /// to change the NFTForwarder recipient
 
 import NonFungibleToken from "NonFungibleToken"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import NFTForwarding from "NFTForwarding"
 
 transaction(newRecipientAddress: Address) {
@@ -20,7 +20,7 @@ transaction(newRecipientAddress: Address) {
 
         // Get Receiver Capability from the recipientAddress account
         self.newRecipientCollection = getAccount(newRecipientAddress)
-            .getCapability<&{NonFungibleToken.CollectionPublic}>(ExampleNFT.CollectionPublicPath)
+            .getCapability<&{NonFungibleToken.CollectionPublic}>(CandyNFT.CollectionPublicPath)
 
         // Make sure the CollectionPublic capability is valid before minting the NFT
         if !self.newRecipientCollection.check() {

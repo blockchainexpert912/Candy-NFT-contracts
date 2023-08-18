@@ -2,16 +2,16 @@
 /// to unlink its collection from public storage
 
 import NonFungibleToken from "NonFungibleToken"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import NFTForwarding from "NFTForwarding"
 
 transaction {
 
     prepare(signer: AuthAccount) {
 
-        if signer.getCapability(ExampleNFT.CollectionPublicPath).check<&{ExampleNFT.ExampleNFTCollectionPublic}>() {
-            log("Unlinking ExampleNFTCollectionPublic from PublicPath")
-            signer.unlink(ExampleNFT.CollectionPublicPath)
+        if signer.getCapability(CandyNFT.CollectionPublicPath).check<&{CandyNFT.CandyNFTCollectionPublic}>() {
+            log("Unlinking CandyNFTCollectionPublic from PublicPath")
+            signer.unlink(CandyNFT.CollectionPublicPath)
         }
 
     }

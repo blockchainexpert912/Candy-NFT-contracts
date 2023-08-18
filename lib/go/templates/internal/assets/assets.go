@@ -563,7 +563,7 @@ const AssetDebug = false
 
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
-// For example if you run go-bindata on data/... and data contains the
+// For Candy if you run go-bindata on data/... and data contains the
 // following hierarchy:
 //     data/
 //       foo.txt

@@ -1,7 +1,7 @@
 /// This script gets all the view-based metadata associated with the specified NFT
 /// and returns it as a single struct
 
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import MetadataViews from "MetadataViews"
 
 pub struct NFT {
@@ -87,11 +87,11 @@ pub fun main(address: Address, id: UInt64): NFT {
     let account = getAccount(address)
 
     let collection = account
-        .getCapability(ExampleNFT.CollectionPublicPath)
-        .borrow<&{ExampleNFT.ExampleNFTCollectionPublic}>()
+        .getCapability(CandyNFT.CollectionPublicPath)
+        .borrow<&{CandyNFT.CandyNFTCollectionPublic}>()
         ?? panic("Could not borrow a reference to the collection")
 
-    let nft = collection.borrowExampleNFT(id: id)!
+    let nft = collection.borrowCandyNFT(id: id)!
 
     // Get the basic display information for this NFT
     let display = MetadataViews.getDisplay(nft)!

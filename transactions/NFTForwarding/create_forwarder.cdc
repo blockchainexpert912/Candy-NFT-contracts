@@ -4,7 +4,7 @@
 
 import NonFungibleToken from "NonFungibleToken"
 import MetadataViews from "MetadataViews"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import NFTForwarding from "NFTForwarding"
 
 transaction(recipientAddress: Address) {
@@ -15,7 +15,7 @@ transaction(recipientAddress: Address) {
 
             let forwarderRef = signer.borrow<&NFTForwarding.NFTForwarder>(from: NFTForwarding.StoragePath)!
             let newRecipientCollection = getAccount(recipientAddress)
-                .getCapability<&{NonFungibleToken.CollectionPublic}>(ExampleNFT.CollectionPublicPath)
+                .getCapability<&{NonFungibleToken.CollectionPublic}>(CandyNFT.CollectionPublicPath)
 
             // Make sure the CollectionPublic capability is valid before minting the NFT
             if !newRecipientCollection.check() {
@@ -32,7 +32,7 @@ transaction(recipientAddress: Address) {
             .getCapability<
                 &{NonFungibleToken.CollectionPublic}
             >(
-                ExampleNFT.CollectionPublicPath
+                CandyNFT.CollectionPublicPath
             )
 
         // Make sure the CollectionPublic capability is valid before minting the NFT
@@ -45,18 +45,18 @@ transaction(recipientAddress: Address) {
         signer.save(<-forwarder, to: NFTForwarding.StoragePath)
 
         // unlink existing Collection capabilities from PublicPath
-        if signer.getCapability(ExampleNFT.CollectionPublicPath)
+        if signer.getCapability(CandyNFT.CollectionPublicPath)
             .check<&{
                 NonFungibleToken.CollectionPublic,
-                ExampleNFT.ExampleNFTCollectionPublic,
+                CandyNFT.CandyNFTCollectionPublic,
                 MetadataViews.ResolverCollection
             }>() {
-            signer.unlink(ExampleNFT.CollectionPublicPath)
+            signer.unlink(CandyNFT.CollectionPublicPath)
         }
 
         // create a public capability for the forwarder where the collection would be
         signer.link<&{NonFungibleToken.Receiver}>(
-            ExampleNFT.CollectionPublicPath,
+            CandyNFT.CollectionPublicPath,
             target: NFTForwarding.StoragePath
         )
     }

@@ -18,8 +18,8 @@ import (
 func TestSetupRoyaltyReceiver(t *testing.T) {
 	b, adapter, accountKeys := newTestSetup(t)
 
-	exampleNFTAccountKey, exampleNFTSigner := accountKeys.NewWithSigner()
-	_, metadataAddress, exampleNFTAddress, _ := deployNFTContracts(t, b, adapter, exampleNFTAccountKey)
+	CandyNFTAccountKey, CandyNFTSigner := accountKeys.NewWithSigner()
+	_, metadataAddress, CandyNFTAddress, _ := deployNFTContracts(t, b, adapter, CandyNFTAccountKey)
 
 	t.Run("Should not be able to setup a royalty receiver for a vault that doesn't exist", func(t *testing.T) {
 
@@ -27,10 +27,10 @@ func TestSetupRoyaltyReceiver(t *testing.T) {
 		// at a public path determined by the `MetadataViews.getRoyaltyReceiverPublicPath()` function
 		// It can be used for any fungible token the beneficiary wants to receive
 		script := templates.GenerateSetupAccountToReceiveRoyaltyScript(metadataAddress, flow.HexToAddress(emulatorFTAddress))
-		tx := createTxWithTemplateAndAuthorizer(b, script, exampleNFTAddress)
+		tx := createTxWithTemplateAndAuthorizer(b, script, CandyNFTAddress)
 
 		// Here we use a storage path that points to nothing, so it will fail
-		// The positive case is handled in the `mintExampleNFT()` test case
+		// The positive case is handled in the `mintCandyNFT()` test case
 		vaultPath := cadence.Path{Domain: common.PathDomainStorage, Identifier: "missingVault"}
 		tx.AddArgument(vaultPath)
 
@@ -40,11 +40,11 @@ func TestSetupRoyaltyReceiver(t *testing.T) {
 			t, b, tx,
 			[]flow.Address{
 				b.ServiceKey().Address,
-				exampleNFTAddress,
+				CandyNFTAddress,
 			},
 			[]crypto.Signer{
 				serviceSigner,
-				exampleNFTSigner,
+				CandyNFTSigner,
 			},
 			true,
 		)
@@ -56,45 +56,45 @@ func TestGetNFTMetadata(t *testing.T) {
 
 	// Create new keys for the NFT contract account
 	// and deploy all the NFT contracts
-	exampleNFTAccountKey, exampleNFTSigner := accountKeys.NewWithSigner()
-	nftAddress, metadataAddress, exampleNFTAddress, _ := deployNFTContracts(t, b, adapter, exampleNFTAccountKey)
+	CandyNFTAccountKey, CandyNFTSigner := accountKeys.NewWithSigner()
+	nftAddress, metadataAddress, CandyNFTAddress, _ := deployNFTContracts(t, b, adapter, CandyNFTAccountKey)
 
 	// Mint a single NFT with standard royalty cuts and metadata
-	mintExampleNFT(t, b,
+	mintCandyNFT(t, b,
 		accountKeys,
-		nftAddress, metadataAddress, exampleNFTAddress,
-		exampleNFTAccountKey,
-		exampleNFTSigner)
+		nftAddress, metadataAddress, CandyNFTAddress,
+		CandyNFTAccountKey,
+		CandyNFTSigner)
 
 	t.Run("Should be able to verify the metadata of the minted NFT", func(t *testing.T) {
 
 		// Run a script to get the Display view for the specified NFT ID
-		script := templates.GenerateGetNFTMetadataScript(nftAddress, exampleNFTAddress, metadataAddress)
+		script := templates.GenerateGetNFTMetadataScript(nftAddress, CandyNFTAddress, metadataAddress)
 		result := executeScriptAndCheck(
 			t, b,
 			script,
 			[][]byte{
-				jsoncdc.MustEncode(cadence.NewAddress(exampleNFTAddress)),
+				jsoncdc.MustEncode(cadence.NewAddress(CandyNFTAddress)),
 				jsoncdc.MustEncode(cadence.NewUInt64(0)),
 			},
 		)
 
 		// Expected metadata
 		const (
-			name        = "Example NFT 0"
-			description = "This is an example NFT"
-			thumbnail   = "example.jpeg"
-			externalURL = "https://example-nft.onflow.org/0"
+			name        = "Candy NFT 0"
+			description = "This is an Candy NFT"
+			thumbnail   = "Candy.jpeg"
+			externalURL = "https://Candy-nft.onflow.org/0"
 		)
 
 		nftResult := result.(cadence.Struct)
 
-		nftType := fmt.Sprintf("A.%s.ExampleNFT.NFT", exampleNFTAddress)
+		nftType := fmt.Sprintf("A.%s.CandyNFT.NFT", CandyNFTAddress)
 
 		assert.Equal(t, cadence.String(name), nftResult.Fields[0])
 		assert.Equal(t, cadence.String(description), nftResult.Fields[1])
 		assert.Equal(t, cadence.String(thumbnail), nftResult.Fields[2])
-		assert.Equal(t, cadence.NewAddress(exampleNFTAddress), nftResult.Fields[3])
+		assert.Equal(t, cadence.NewAddress(CandyNFTAddress), nftResult.Fields[3])
 		assert.Equal(t, cadence.String(nftType), nftResult.Fields[4])
 
 		// TODO: To verify the return data from the script with the expected data.
@@ -113,9 +113,9 @@ func TestGetNFTMetadata(t *testing.T) {
 
 		// Verify NFTCollectionData results are as expected
 		const (
-			pathName                = "exampleNFTCollection"
-			collectionType          = "A.e03daebed8ca0615.ExampleNFT.Collection"
-			collectionPublicType    = "A.e03daebed8ca0615.ExampleNFT.ExampleNFTCollectionPublic"
+			pathName                = "CandyNFTCollection"
+			collectionType          = "A.e03daebed8ca0615.CandyNFT.Collection"
+			collectionPublicType    = "A.e03daebed8ca0615.CandyNFT.CandyNFTCollectionPublic"
 			nftCollectionPublicType = "A.01cf0e2f2f715450.NonFungibleToken.CollectionPublic"
 			nftReceiverType         = "A.01cf0e2f2f715450.NonFungibleToken.Receiver"
 			resolverCollectionType  = "A.179b6b1cb6755e31.MetadataViews.ResolverCollection"
@@ -130,10 +130,10 @@ func TestGetNFTMetadata(t *testing.T) {
 
 		// Verify NFTCollectionDisplay results are as expected
 		const (
-			collectionName        = "The Example Collection"
-			collectionDescription = "This collection is used as an example to help you develop your next Flow NFT."
+			collectionName        = "The Candy Collection"
+			collectionDescription = "This collection is used as an Candy to help you develop your next Flow NFT."
 			collectionImage       = "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
-			collectionExternalURL = "https://example-nft.onflow.org"
+			collectionExternalURL = "https://Candy-nft.onflow.org"
 		)
 		assert.Equal(t, cadence.String(collectionName), nftResult.Fields[14])
 		assert.Equal(t, cadence.String(collectionDescription), nftResult.Fields[15])
@@ -146,7 +146,7 @@ func TestGetNFTMetadata(t *testing.T) {
 
 		// Verify Edition results are as expected
 		const (
-			editionName = "Example NFT Edition"
+			editionName = "Candy NFT Edition"
 			editionNum  = 0
 		)
 		expectedName, _ := cadence.NewString(editionName)
@@ -168,7 +168,7 @@ func TestGetNFTMetadata(t *testing.T) {
 
 		mintTrait := traits.Values[1].(cadence.Struct)
 		assert.Equal(t, minterName, mintTrait.Fields[0])
-		assert.Equal(t, fmt.Sprintf("0x%s", exampleNFTAddress.String()), mintTrait.Fields[1].String())
+		assert.Equal(t, fmt.Sprintf("0x%s", CandyNFTAddress.String()), mintTrait.Fields[1].String())
 		assert.Equal(t, cadence.NewOptional(nil), mintTrait.Fields[2])
 		assert.Equal(t, cadence.NewOptional(nil), mintTrait.Fields[3])
 
@@ -201,35 +201,35 @@ func TestGetNFTView(t *testing.T) {
 
 	// Create new keys for the NFT contract account
 	// and deploy all the NFT contracts
-	exampleNFTAccountKey, exampleNFTSigner := accountKeys.NewWithSigner()
-	nftAddress, metadataAddress, exampleNFTAddress, _ := deployNFTContracts(t, b, adapter, exampleNFTAccountKey)
+	CandyNFTAccountKey, CandyNFTSigner := accountKeys.NewWithSigner()
+	nftAddress, metadataAddress, CandyNFTAddress, _ := deployNFTContracts(t, b, adapter, CandyNFTAccountKey)
 
 	// Mint a single NFT with standard royalty cuts and metadata
-	mintExampleNFT(t, b,
+	mintCandyNFT(t, b,
 		accountKeys,
-		nftAddress, metadataAddress, exampleNFTAddress,
-		exampleNFTAccountKey,
-		exampleNFTSigner)
+		nftAddress, metadataAddress, CandyNFTAddress,
+		CandyNFTAccountKey,
+		CandyNFTSigner)
 
 	t.Run("Should be able to verify the nft metadata view of the minted NFT", func(t *testing.T) {
 
 		// Run a script to get the Display view for the specified NFT ID
-		script := templates.GenerateGetNFTViewScript(nftAddress, exampleNFTAddress, metadataAddress)
+		script := templates.GenerateGetNFTViewScript(nftAddress, CandyNFTAddress, metadataAddress)
 		result := executeScriptAndCheck(
 			t, b,
 			script,
 			[][]byte{
-				jsoncdc.MustEncode(cadence.NewAddress(exampleNFTAddress)),
+				jsoncdc.MustEncode(cadence.NewAddress(CandyNFTAddress)),
 				jsoncdc.MustEncode(cadence.NewUInt64(0)),
 			},
 		)
 
 		// Expected metadata
 		const (
-			name        = "Example NFT 0"
-			description = "This is an example NFT"
-			thumbnail   = "example.jpeg"
-			externalURL = "https://example-nft.onflow.org/0"
+			name        = "Candy NFT 0"
+			description = "This is an Candy NFT"
+			thumbnail   = "Candy.jpeg"
+			externalURL = "https://Candy-nft.onflow.org/0"
 		)
 
 		nftResult := result.(cadence.Struct)
@@ -252,9 +252,9 @@ func TestGetNFTView(t *testing.T) {
 
 		// Verify NFTCollectionData results are as expected
 		const (
-			pathName                = "exampleNFTCollection"
-			collectionType          = "A.e03daebed8ca0615.ExampleNFT.Collection"
-			collectionPublicType    = "A.e03daebed8ca0615.ExampleNFT.ExampleNFTCollectionPublic"
+			pathName                = "CandyNFTCollection"
+			collectionType          = "A.e03daebed8ca0615.CandyNFT.Collection"
+			collectionPublicType    = "A.e03daebed8ca0615.CandyNFT.CandyNFTCollectionPublic"
 			nftCollectionPublicType = "A.01cf0e2f2f715450.NonFungibleToken.CollectionPublic"
 			nftReceiverType         = "A.01cf0e2f2f715450.NonFungibleToken.Receiver"
 			resolverCollectionType  = "A.179b6b1cb6755e31.MetadataViews.ResolverCollection"
@@ -269,10 +269,10 @@ func TestGetNFTView(t *testing.T) {
 
 		// Verify NFTCollectionDisplay results are as expected
 		const (
-			collectionName        = "The Example Collection"
-			collectionDescription = "This collection is used as an example to help you develop your next Flow NFT."
+			collectionName        = "The Candy Collection"
+			collectionDescription = "This collection is used as an Candy to help you develop your next Flow NFT."
 			collectionImage       = "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
-			collectionExternalURL = "https://example-nft.onflow.org"
+			collectionExternalURL = "https://Candy-nft.onflow.org"
 		)
 		assert.Equal(t, cadence.String(collectionName), nftResult.Fields[13])
 		assert.Equal(t, cadence.String(collectionDescription), nftResult.Fields[14])
@@ -294,7 +294,7 @@ func TestGetNFTView(t *testing.T) {
 
 		mintTrait := traits.Values[1].(cadence.Struct)
 		assert.Equal(t, minterName, mintTrait.Fields[0])
-		assert.Equal(t, fmt.Sprintf("0x%s", exampleNFTAddress.String()), mintTrait.Fields[1].String())
+		assert.Equal(t, fmt.Sprintf("0x%s", CandyNFTAddress.String()), mintTrait.Fields[1].String())
 		assert.Equal(t, cadence.NewOptional(nil), mintTrait.Fields[2])
 		assert.Equal(t, cadence.NewOptional(nil), mintTrait.Fields[3])
 
@@ -331,24 +331,24 @@ func TestSetupCollectionFromNFTReference(t *testing.T) {
 
 	// Create new keys for the NFT contract account
 	// and deploy all the NFT contracts
-	exampleNFTAccountKey, exampleNFTSigner := accountKeys.NewWithSigner()
-	nftAddress, metadataAddress, exampleNFTAddress, _ := deployNFTContracts(t, b, adapter, exampleNFTAccountKey)
+	CandyNFTAccountKey, CandyNFTSigner := accountKeys.NewWithSigner()
+	nftAddress, metadataAddress, CandyNFTAddress, _ := deployNFTContracts(t, b, adapter, CandyNFTAccountKey)
 
 	// Mint a single NFT with standard royalty cuts and metadata
-	mintExampleNFT(t, b,
+	mintCandyNFT(t, b,
 		accountKeys,
-		nftAddress, metadataAddress, exampleNFTAddress,
-		exampleNFTAccountKey,
-		exampleNFTSigner)
+		nftAddress, metadataAddress, CandyNFTAddress,
+		CandyNFTAccountKey,
+		CandyNFTSigner)
 
 	t.Run("Should be able to setup an account using the NFTCollectionData metadata view of a referenced NFT", func(t *testing.T) {
-		// Ideally, the exampleNFTAddress would not be needed in order to perform the full setup, but it is required
+		// Ideally, the CandyNFTAddress would not be needed in order to perform the full setup, but it is required
 		// until the following issue is supported in cadence: https://github.com/onflow/cadence/issues/1617
-		script := templates.GenerateSetupAccountFromNftReferenceScript(nftAddress, exampleNFTAddress, metadataAddress)
+		script := templates.GenerateSetupAccountFromNftReferenceScript(nftAddress, CandyNFTAddress, metadataAddress)
 		tx := createTxWithTemplateAndAuthorizer(b, script, aAddress)
 
-		tx.AddArgument(cadence.NewAddress(exampleNFTAddress))
-		tx.AddArgument(cadence.Path{Domain: common.PathDomainPublic, Identifier: "exampleNFTCollection"})
+		tx.AddArgument(cadence.NewAddress(CandyNFTAddress))
+		tx.AddArgument(cadence.Path{Domain: common.PathDomainPublic, Identifier: "CandyNFTCollection"})
 		tx.AddArgument(cadence.NewUInt64(0))
 
 		serviceSigner, _ := b.ServiceKey().Signer()
@@ -366,7 +366,7 @@ func TestSetupCollectionFromNFTReference(t *testing.T) {
 			false,
 		)
 
-		assertCollectionLength(t, b, nftAddress, exampleNFTAddress,
+		assertCollectionLength(t, b, nftAddress, CandyNFTAddress,
 			aAddress,
 			0,
 		)

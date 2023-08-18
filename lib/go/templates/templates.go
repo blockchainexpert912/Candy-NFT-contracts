@@ -10,14 +10,14 @@ import (
 
 var (
 	placeholderNonFungibleToken = regexp.MustCompile(`"NonFungibleToken"`)
-	placeholderExampleNFT       = regexp.MustCompile(`"ExampleNFT"`)
+	placeholderCandyNFT       = regexp.MustCompile(`"CandyNFT"`)
 	placeholderMetadataViews    = regexp.MustCompile(`"MetadataViews"`)
 	placeholderFungibleToken    = regexp.MustCompile(`"FungibleToken"`)
 )
 
-func replaceAddresses(code string, nftAddress, exampleNFTAddress, metadataAddress, ftAddress flow.Address) []byte {
+func replaceAddresses(code string, nftAddress, CandyNFTAddress, metadataAddress, ftAddress flow.Address) []byte {
 	code = placeholderNonFungibleToken.ReplaceAllString(code, "0x"+nftAddress.String())
-	code = placeholderExampleNFT.ReplaceAllString(code, "0x"+exampleNFTAddress.String())
+	code = placeholderCandyNFT.ReplaceAllString(code, "0x"+CandyNFTAddress.String())
 	code = placeholderMetadataViews.ReplaceAllString(code, "0x"+metadataAddress.String())
 	code = placeholderFungibleToken.ReplaceAllString(code, "0x"+ftAddress.String())
 	return []byte(code)

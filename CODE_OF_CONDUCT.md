@@ -11,7 +11,7 @@ appearance, race, religion, or sexual identity and orientation.
 
 ## Our Standards
 
-Examples of behavior that contributes to creating a positive environment
+Candys of behavior that contributes to creating a positive environment
 include:
 
 * Using welcoming and inclusive language
@@ -20,7 +20,7 @@ include:
 * Focusing on what is best for the community
 * Showing empathy towards other community members
 
-Examples of unacceptable behavior by participants include:
+Candys of unacceptable behavior by participants include:
 
 * The use of sexualized language or imagery and unwelcome sexual attention or
  advances
@@ -46,7 +46,7 @@ threatening, offensive, or harmful.
 ## Scope
 
 This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
+when an individual is representing the project or its community. Candys of
 representing a project or community include using an official project e-mail
 address, posting via an official social media account, or acting as an appointed
 representative at an online or offline event. Representation of a project may be

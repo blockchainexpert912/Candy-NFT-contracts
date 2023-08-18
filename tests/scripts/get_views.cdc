@@ -3,13 +3,13 @@
 
 import NonFungibleToken from "NonFungibleToken"
 import MetadataViews from "MetadataViews"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 
 pub fun main(address: Address, id: UInt64): Bool {
     let account = getAccount(address)
 
     let collectionRef = account
-        .getCapability(ExampleNFT.CollectionPublicPath)
+        .getCapability(CandyNFT.CollectionPublicPath)
         .borrow<&{NonFungibleToken.CollectionPublic}>()
         ?? panic("Could not borrow capability from public collection")
 

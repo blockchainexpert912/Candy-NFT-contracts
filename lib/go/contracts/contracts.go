@@ -22,7 +22,7 @@ var (
 const (
 	filenameNonFungibleToken    = "NonFungibleToken.cdc"
 	filenameOldNonFungibleToken = "utility/NonFungibleToken_old.cdc"
-	filenameExampleNFT          = "ExampleNFT.cdc"
+	filenameCandyNFT          = "CandyNFT.cdc"
 	filenameMetadataViews       = "MetadataViews.cdc"
 	filenameResolver            = "ViewResolver.cdc"
 	filenameFungibleToken       = "utility/FungibleToken.cdc"
@@ -39,11 +39,11 @@ func OldNonFungibleToken() []byte {
 	return assets.MustAsset(filenameOldNonFungibleToken)
 }
 
-// ExampleNFT returns the ExampleNFT contract.
+// CandyNFT returns the CandyNFT contract.
 //
 // The returned contract will import the NonFungibleToken contract from the specified address.
-func ExampleNFT(nftAddress, metadataAddress, resolverAddress flow.Address) []byte {
-	code := assets.MustAssetString(filenameExampleNFT)
+func CandyNFT(nftAddress, metadataAddress, resolverAddress flow.Address) []byte {
+	code := assets.MustAssetString(filenameCandyNFT)
 
 	code = placeholderNonFungibleToken.ReplaceAllString(code, "0x"+nftAddress.String())
 	code = placeholderMetadataViews.ReplaceAllString(code, "0x"+metadataAddress.String())

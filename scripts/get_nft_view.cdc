@@ -1,4 +1,4 @@
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import MetadataViews from "MetadataViews"
 
 pub struct NFTView {
@@ -72,7 +72,7 @@ pub fun main(address: Address, id: UInt64): NFTView {
     let account = getAccount(address)
 
     let collection = account
-        .getCapability(ExampleNFT.CollectionPublicPath)
+        .getCapability(CandyNFT.CollectionPublicPath)
         .borrow<&{MetadataViews.ResolverCollection}>()
         ?? panic("Could not borrow a reference to the collection")
 

@@ -1,7 +1,7 @@
 /// This script checks all views from MetadataViews for
 /// a given NFT. Used for testing only.
 
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import MetadataViews from "MetadataViews"
 
 pub struct NFT {
@@ -87,11 +87,11 @@ pub fun main(address: Address, id: UInt64): Bool {
     let account = getAccount(address)
 
     let collection = account
-        .getCapability(ExampleNFT.CollectionPublicPath)
-        .borrow<&{ExampleNFT.ExampleNFTCollectionPublic}>()
+        .getCapability(CandyNFT.CollectionPublicPath)
+        .borrow<&{CandyNFT.CandyNFTCollectionPublic}>()
         ?? panic("Could not borrow a reference to the collection")
 
-    let nft = collection.borrowExampleNFT(id: id)!
+    let nft = collection.borrowCandyNFT(id: id)!
 
     // Get the basic display information for this NFT
     let display = MetadataViews.getDisplay(nft)!
@@ -151,25 +151,25 @@ pub fun main(address: Address, id: UInt64): Bool {
     assert("NFT Description" == nftMetadata.description)
     assert("NFT Thumbnail" == nftMetadata.thumbnail)
     assert(Address(0x01cf0e2f2f715450) == nftMetadata.owner)
-    assert("A.01cf0e2f2f715450.ExampleNFT.NFT" == nftMetadata.type)
+    assert("A.01cf0e2f2f715450.CandyNFT.NFT" == nftMetadata.type)
     assert("Creator Royalty" == nftMetadata.royalties[0].description)
     assert(Address(0x01cf0e2f2f715450) == nftMetadata.royalties[0].receiver.address)
     assert(0.05 == nftMetadata.royalties[0].cut)
-    assert("https://example-nft.onflow.org/0" == nftMetadata.externalURL)
+    assert("https://Candy-nft.onflow.org/0" == nftMetadata.externalURL)
     assert((0 as UInt64) == nftMetadata.serialNumber)
-    assert(/public/exampleNFTCollection == nftMetadata.collectionPublicPath)
-    assert(/storage/exampleNFTCollection == nftMetadata.collectionStoragePath)
-    assert(/private/exampleNFTCollection == nftMetadata.collectionProviderPath)
-    assert("&A.01cf0e2f2f715450.ExampleNFT.Collection{A.01cf0e2f2f715450.ExampleNFT.ExampleNFTCollectionPublic}" == nftMetadata.collectionPublic)
-    assert("&A.01cf0e2f2f715450.ExampleNFT.Collection{A.01cf0e2f2f715450.ExampleNFT.ExampleNFTCollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.CollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.Receiver,A.f8d6e0586b0a20c7.MetadataViews.ResolverCollection}" == nftMetadata.collectionPublicLinkedType)
-    assert("&A.01cf0e2f2f715450.ExampleNFT.Collection{A.01cf0e2f2f715450.ExampleNFT.ExampleNFTCollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.CollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.Provider,A.f8d6e0586b0a20c7.MetadataViews.ResolverCollection}" == nftMetadata.collectionProviderLinkedType)
-    assert("The Example Collection" == nftMetadata.collectionName)
-    assert("This collection is used as an example to help you develop your next Flow NFT." == nftMetadata.collectionDescription)
-    assert("https://example-nft.onflow.org" == nftMetadata.collectionExternalURL)
+    assert(/public/CandyNFTCollection == nftMetadata.collectionPublicPath)
+    assert(/storage/CandyNFTCollection == nftMetadata.collectionStoragePath)
+    assert(/private/CandyNFTCollection == nftMetadata.collectionProviderPath)
+    assert("&A.01cf0e2f2f715450.CandyNFT.Collection{A.01cf0e2f2f715450.CandyNFT.CandyNFTCollectionPublic}" == nftMetadata.collectionPublic)
+    assert("&A.01cf0e2f2f715450.CandyNFT.Collection{A.01cf0e2f2f715450.CandyNFT.CandyNFTCollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.CollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.Receiver,A.f8d6e0586b0a20c7.MetadataViews.ResolverCollection}" == nftMetadata.collectionPublicLinkedType)
+    assert("&A.01cf0e2f2f715450.CandyNFT.Collection{A.01cf0e2f2f715450.CandyNFT.CandyNFTCollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.CollectionPublic,A.f8d6e0586b0a20c7.NonFungibleToken.Provider,A.f8d6e0586b0a20c7.MetadataViews.ResolverCollection}" == nftMetadata.collectionProviderLinkedType)
+    assert("The Candy Collection" == nftMetadata.collectionName)
+    assert("This collection is used as an Candy to help you develop your next Flow NFT." == nftMetadata.collectionDescription)
+    assert("https://Candy-nft.onflow.org" == nftMetadata.collectionExternalURL)
     assert("https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg" == nftMetadata.collectionSquareImage)
     assert("https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg" == nftMetadata.collectionBannerImage)
     assert({"twitter": "https://twitter.com/flow_blockchain"} == nftMetadata.collectionSocials)
-    assert("Example NFT Edition" == nftMetadata.edition.name)
+    assert("Candy NFT Edition" == nftMetadata.edition.name)
     assert((0 as UInt64) == nftMetadata.edition.number)
     assert(nil == nftMetadata.edition.max)
     assert("Common" == nftMetadata.traits.traits[3]!.rarity!.description)

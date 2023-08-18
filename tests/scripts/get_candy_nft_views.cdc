@@ -1,11 +1,11 @@
 /// This script checks all the supported views from
-/// the ExampleNFT contract. Used for testing only.
+/// the CandyNFT contract. Used for testing only.
 
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 import MetadataViews from "MetadataViews"
 
 pub fun main(): Bool {
-    let views = ExampleNFT.getViews()
+    let views = CandyNFT.getViews()
 
     let expected = [
         Type<MetadataViews.NFTCollectionData>(),

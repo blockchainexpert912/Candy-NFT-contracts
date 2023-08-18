@@ -84,7 +84,7 @@ pub contract NFTForwarding {
     }
 
     init() {
-        self.StoragePath = /storage/ExampleNFTForwarder
+        self.StoragePath = /storage/CandyNFTForwarder
     }
 
 }

@@ -5,7 +5,7 @@
 
 import NonFungibleToken from "NonFungibleToken"
 import MetadataViews from "MetadataViews"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 
 transaction(address: Address, publicPath: PublicPath, id: UInt64) {
 
@@ -25,7 +25,7 @@ transaction(address: Address, publicPath: PublicPath, id: UInt64) {
         signer.save(<-emptyCollection, to: nftCollectionView.storagePath)
 
         // create a public capability for the collection
-        signer.link<&{NonFungibleToken.CollectionPublic, ExampleNFT.ExampleNFTCollectionPublic, MetadataViews.ResolverCollection}>(
+        signer.link<&{NonFungibleToken.CollectionPublic, CandyNFT.CandyNFTCollectionPublic, MetadataViews.ResolverCollection}>(
             nftCollectionView.publicPath,
             target: nftCollectionView.storagePath
         )

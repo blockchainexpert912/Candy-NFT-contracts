@@ -1,11 +1,11 @@
 import NonFungibleToken from "NonFungibleToken"
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 
 pub fun main(address: Address): Int {
     let account = getAccount(address)
 
     let collectionRef = account
-        .getCapability(ExampleNFT.CollectionPublicPath)
+        .getCapability(CandyNFT.CollectionPublicPath)
         .borrow<&{NonFungibleToken.CollectionPublic}>()
         ?? panic("Could not borrow capability from public collection")
 

@@ -17,15 +17,15 @@ import (
 	"github.com/onflow/flow-nft/lib/go/templates"
 )
 
-// Mints a single NFT from the ExampleNFT contract
+// Mints a single NFT from the CandyNFT contract
 // with standard metadata fields and royalty cuts
-func mintExampleNFT(
+func mintCandyNFT(
 	t *testing.T,
 	b emulator.Emulator,
 	accountKeys *test.AccountKeys,
-	nftAddress, metadataAddress, exampleNFTAddress flow.Address,
-	exampleNFTAccountKey *flow.AccountKey,
-	exampleNFTSigner crypto.Signer,
+	nftAddress, metadataAddress, CandyNFTAddress flow.Address,
+	CandyNFTAccountKey *flow.AccountKey,
+	CandyNFTSigner crypto.Signer,
 ) {
 
 	// Create two new accounts to act as beneficiaries for royalties
@@ -44,10 +44,10 @@ func mintExampleNFT(
 
 	// Generate the script that mints a new NFT and deposits it into the recipient's account
 	// whose address is the first argument to the transaction
-	script := templates.GenerateMintNFTScript(nftAddress, exampleNFTAddress, metadataAddress, flow.HexToAddress(emulatorFTAddress))
+	script := templates.GenerateMintNFTScript(nftAddress, CandyNFTAddress, metadataAddress, flow.HexToAddress(emulatorFTAddress))
 
 	// Create the transaction object with the generated script and authorizer
-	tx := createTxWithTemplateAndAuthorizer(b, script, exampleNFTAddress)
+	tx := createTxWithTemplateAndAuthorizer(b, script, CandyNFTAddress)
 
 	// Assemble the cut information for royalties
 	cut1 := CadenceUFix64("0.25")
@@ -59,10 +59,10 @@ func mintExampleNFT(
 	royaltyBeneficiaries := []cadence.Value{cadence.NewAddress(beneficiaryAddress1), cadence.NewAddress(beneficiaryAddress2)}
 
 	// First argument is the recipient of the newly minted NFT
-	tx.AddArgument(cadence.NewAddress(exampleNFTAddress))
-	tx.AddArgument(cadence.String("Example NFT 0"))
-	tx.AddArgument(cadence.String("This is an example NFT"))
-	tx.AddArgument(cadence.String("example.jpeg"))
+	tx.AddArgument(cadence.NewAddress(CandyNFTAddress))
+	tx.AddArgument(cadence.String("Candy NFT 0"))
+	tx.AddArgument(cadence.String("This is an Candy NFT"))
+	tx.AddArgument(cadence.String("Candy.jpeg"))
 	tx.AddArgument(cadence.NewArray(cuts))
 	tx.AddArgument(cadence.NewArray(royaltyDescriptions))
 	tx.AddArgument(cadence.NewArray(royaltyBeneficiaries))
@@ -73,49 +73,49 @@ func mintExampleNFT(
 		t, b, tx,
 		[]flow.Address{
 			b.ServiceKey().Address,
-			exampleNFTAddress,
+			CandyNFTAddress,
 		},
 		[]crypto.Signer{
 			serviceSigner,
-			exampleNFTSigner,
+			CandyNFTSigner,
 		},
 		false,
 	)
 }
 
-// Deploys the NonFungibleToken, MetadataViews, and ExampleNFT contracts to new accounts
+// Deploys the NonFungibleToken, MetadataViews, and CandyNFT contracts to new accounts
 // and returns their addresses
 func deployNFTContracts(
 	t *testing.T,
 	b emulator.Emulator,
 	adapter *adapters.SDKAdapter,
-	exampleNFTAccountKey *flow.AccountKey,
+	CandyNFTAccountKey *flow.AccountKey,
 ) (flow.Address, flow.Address, flow.Address, flow.Address) {
 
 	nftAddress := deploy(t, b, adapter, "NonFungibleToken", contracts.NonFungibleToken())
 	metadataAddress := deploy(t, b, adapter, "MetadataViews", contracts.MetadataViews(flow.HexToAddress(emulatorFTAddress), nftAddress))
 	resolverAddress := deploy(t, b, adapter, "ViewResolver", contracts.Resolver())
 
-	exampleNFTAddress := deploy(
+	CandyNFTAddress := deploy(
 		t, b, adapter,
-		"ExampleNFT",
-		contracts.ExampleNFT(nftAddress, metadataAddress, resolverAddress),
-		exampleNFTAccountKey,
+		"CandyNFT",
+		contracts.CandyNFT(nftAddress, metadataAddress, resolverAddress),
+		CandyNFTAccountKey,
 	)
 
-	return nftAddress, metadataAddress, exampleNFTAddress, resolverAddress
+	return nftAddress, metadataAddress, CandyNFTAddress, resolverAddress
 }
 
-// Assers that the ExampleNFT collection in the specified user's account
+// Assers that the CandyNFT collection in the specified user's account
 // is the expected length
 func assertCollectionLength(
 	t *testing.T,
 	b emulator.Emulator,
-	nftAddress flow.Address, exampleNFTAddress flow.Address,
+	nftAddress flow.Address, CandyNFTAddress flow.Address,
 	collectionAddress flow.Address,
 	expectedLength int,
 ) {
-	script := templates.GenerateGetCollectionLengthScript(nftAddress, exampleNFTAddress)
+	script := templates.GenerateGetCollectionLengthScript(nftAddress, CandyNFTAddress)
 	actualLength := executeScriptAndCheck(t, b, script, [][]byte{jsoncdc.MustEncode(cadence.NewAddress(collectionAddress))})
 	assert.Equal(t, cadence.NewInt(expectedLength), actualLength)
 }

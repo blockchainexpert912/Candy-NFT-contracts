@@ -1,5 +1,5 @@
-import ExampleNFT from "ExampleNFT"
+import CandyNFT from "CandyNFT"
 
 pub fun main(): UInt64 {
-    return ExampleNFT.totalSupply
+    return CandyNFT.totalSupply
 }
